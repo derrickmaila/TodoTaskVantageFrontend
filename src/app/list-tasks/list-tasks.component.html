@@ -1,0 +1,99 @@
+<div class="container col-sm-12 col-md-12 col-lg-12"> 
+    <div>
+        <button (click)="addTask()" class="btn btn-primary">Add Task</button>
+        <input type="text" [(ngModel)]="filterTask" name="filterTask" class="form-control" placeholder="Search by title or category">
+      </div> 
+  <h2>All Tasks</h2>  
+  <div class="table-responsive table-container">  
+    <table class="table table-dark table-hover table-striped">  
+      <thead class="thead-light">  
+        <tr>
+          <th>#</th>  
+          <th>Title</th>  
+          <th>Category</th>
+          <th>Action</th>
+        </tr>  
+      </thead>  
+      <tbody>  
+        <tr *ngFor="let task of tasks  | filter:[
+                        {field: 'title',value:filterTask},
+                        {field: 'category',value:filterTask}
+                    ] | paginate: { 
+                          id: 'listing_pagination',
+                          itemsPerPage: 5,
+                          currentPage: page
+                    } ,  let i =  index"> 
+          <td>{{i+1}}</td> 
+          <td>{{task.title}}</td>  
+          <td>{{task.category}}</td>
+            
+          <td>
+            <button (click)="viewTask(task)"  class="btn btn-info btnall"> View</button>
+            <button  class="btn btn-danger btnall "
+                            mwlConfirmationPopover
+                            [popoverTitle]="popoverTitle"
+                            [popoverMessage]="popoverMessage"
+                            placement="left"
+                            (confirm) ="deleteTask(task)"
+                            (cancel)="cancelClicked = true"
+            > Delete</button>  
+            <button (click)="updateTask(task)"  class="btn btn-primary btnall"> Edit</button>  
+          </td>  
+        </tr>  
+      </tbody>  
+    </table>
+    <div>
+      <pagination-controls  id="listing_pagination" maxSize="5" directionLinks="true" (pageChange)="page = $event"></pagination-controls>
+    </div>  
+  </div> 
+
+  <div class="backdrop" [ngStyle]="{'display':display}"></div>
+  <div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Task Information</h4>
+          <button type="button" class="close" aria-label="Close" (click)="onCloseHandled()"><span class="btn btn-primary">&times;</span></button>
+          
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive table-container ">  
+                <table class="table table-dark table-hover table-striped table-bordered">  
+                  <thead class="thead-light">
+                    <tr>
+                      <th colspan="2">Todo Daily Task Information</th>
+                    </tr>
+                  </thead>  
+                  <tbody >
+                    <tr >
+                        <td>Title</td>
+                        <td >{{title}}</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>{{category}}</td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td>{{description}}</td>
+                    </tr>
+                    <tr>
+                        <td>Duedate</td>
+                        <td>{{duedate | date:'yyyy-MM-dd' }} </td>
+                    </tr>
+                     <tr>  
+                        <td>Status</td>
+                        <td>{{status}}</td>
+                    </tr>  
+                  </tbody>  
+                </table>
+            </div>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" (click)="onCloseHandled()" >Close</button>
+        </div>
+      </div><!--/.modal-content-->
+    </div><!--/.modal-dialog-->
+  </div><!--/.modal!-->
+ 
+</div> 
